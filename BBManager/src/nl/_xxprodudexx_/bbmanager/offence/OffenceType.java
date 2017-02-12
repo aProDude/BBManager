@@ -4,7 +4,7 @@ public enum OffenceType {
 
 	KILLAURA(Category.HACK, "Kill-Aura", 50),
 	SPAM(Category.CHAT, "Spam", 15),
-	BAN_EVADE(Category.ACCOUNT, "Ban-Evade", 100);
+	BAN_EVADE(Category.ACCOUNT, "Ban-Evade", 100); 
 
 	private String name;
 	private int points;
