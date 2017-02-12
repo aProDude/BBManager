@@ -19,7 +19,7 @@ public class BBManagerAPI {
 	}
 
 	public void setBBPoints(UUID uuid, int points) {
-		BBPlayer p = new BBPlayer(uuid);
+		BBPlayer p = new BBPlayer(uuid); 
 		p.setBBPoints(points);
 		p.updateProfile();
 	}
