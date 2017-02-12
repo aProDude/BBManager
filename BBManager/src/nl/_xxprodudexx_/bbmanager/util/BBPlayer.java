@@ -11,7 +11,7 @@ public class BBPlayer {
 	private FileConfiguration c = YamlFile.getPlayerDataFile().getConfig();
 
 	private UUID uuid;
-	private String name;
+	private String name; 
 	private int BBPoints;
 	private int BBWarnings;
 	private boolean isBanned;
