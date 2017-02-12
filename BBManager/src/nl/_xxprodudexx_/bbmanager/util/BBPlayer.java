@@ -29,6 +29,9 @@ public class BBPlayer {
 			this.BBPoints = c.getInt("Data." + uuid.toString() + ".BBPoints");
 			this.BBWarnings = c.getInt("Data." + uuid.toString() + ".BBWarnings");
 			this.isBanned = c.getBoolean("Data." + uuid.toString() + ".Banned");
+		} else {
+			this.BBPoints = this.BBWarnings = 0;
+			this.isBanned = false;
 		}
 	}
 
@@ -44,6 +47,9 @@ public class BBPlayer {
 			this.BBPoints = c.getInt("Data." + uuid.toString() + ".BBPoints");
 			this.BBWarnings = c.getInt("Data." + uuid.toString() + ".BBWarnings");
 			this.isBanned = c.getBoolean("Data." + uuid.toString() + ".Banned");
+		} else {
+			this.BBPoints = this.BBWarnings = 0;
+			this.isBanned = false;
 		}
 	}
 
