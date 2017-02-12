@@ -13,7 +13,7 @@ public class BBManagerAPI {
 		BBPlayer p = new BBPlayer(uuid);
 		p.addBBPoints(points);
 		p.updateProfile();
-	}
+	} 
 
 	public void addBBWarning(UUID uuid) {
 		BBPlayer p = new BBPlayer(uuid);
