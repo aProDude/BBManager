@@ -2,6 +2,9 @@ package nl._xxprodudexx_.bbmanager.api;
 
 import java.util.UUID;
 
+import org.bukkit.entity.Player;
+
+import nl._xxprodudexx_.bbmanager.Main;
 import nl._xxprodudexx_.bbmanager.util.BBPlayer;
 
 public class BBManagerAPI {
@@ -19,7 +22,7 @@ public class BBManagerAPI {
 	}
 
 	public void setBBPoints(UUID uuid, int points) {
-		BBPlayer p = new BBPlayer(uuid); 
+		BBPlayer p = new BBPlayer(uuid);
 		p.setBBPoints(points);
 		p.updateProfile();
 	}
@@ -29,8 +32,8 @@ public class BBManagerAPI {
 		p.setBBWarnings(warnings);
 		p.updateProfile();
 	}
-	
-	public void setBanned(UUID uuid, boolean banned){
+
+	public void setBanned(UUID uuid, boolean banned) {
 		BBPlayer p = new BBPlayer(uuid);
 		p.setBanned(banned);
 		p.updateProfile();
@@ -50,6 +53,15 @@ public class BBManagerAPI {
 
 	public BBPlayer getBBPlayer(UUID uuid) {
 		return new BBPlayer(uuid);
+	}
+
+	public BBPlayer getBBPlayer(Player p) {
+		for (BBPlayer bbp : Main.getInstance().getBBPlayers()) {
+			if (bbp.getUUID().equals(p.getUniqueId())) {
+				return bbp;
+			}
+		}
+		return null;
 	}
 
 }
