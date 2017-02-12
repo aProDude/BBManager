@@ -75,5 +75,12 @@ public class YamlFile {
 	public void reload() {
 		config = YamlConfiguration.loadConfiguration(file);
 	}
+	
+	/**
+	 * Returns the FileConfiguration
+	 */
 
+	public FileConfiguration getConfig(){
+		return config;
+	}
 }

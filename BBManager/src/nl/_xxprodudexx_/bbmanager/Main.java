@@ -5,18 +5,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import nl._xxprodudexx_.bbmanager.api.BBManagerAPI;
 import nl._xxprodudexx_.bbmanager.util.YamlFile;
 
-public class Main extends JavaPlugin implements BBManagerAPI {
+public class Main extends JavaPlugin  {
 
 	private static Main instance;
-	private static BBManagerAPI api;
+	private static BBManagerAPI api = new BBManagerAPI();
 
 	@Override
 	public void onEnable() {
 		// Set the instance of this class
 		instance = this;
-
-		// Set the instance of the API to this class
-		api = this;
 
 		// Load all configuration-files
 		YamlFile.getPlayerDataFile().load();
