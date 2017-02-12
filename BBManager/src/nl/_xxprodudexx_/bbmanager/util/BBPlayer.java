@@ -6,6 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import nl._xxprodudexx_.bbmanager.Main;
+
 public class BBPlayer {
 
 	private FileConfiguration c = YamlFile.getPlayerDataFile().getConfig();
@@ -33,6 +35,7 @@ public class BBPlayer {
 			this.BBPoints = this.BBWarnings = 0;
 			this.isBanned = false;
 		}
+		Main.getInstance().getBBPlayers().add(this);
 	}
 
 	public void updateProfile() {
