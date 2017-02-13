@@ -12,13 +12,15 @@ public class BBPlayer {
 
 	private FileConfiguration c = YamlFile.getPlayerDataFile().getConfig();
 
+	private BBPlayer bbplayer;
 	private UUID uuid;
-	private String name; 
+	private String name;
 	private int BBPoints;
 	private int BBWarnings;
 	private boolean isBanned;
 
 	public BBPlayer(UUID uuid) {
+		this.bbplayer = this;
 		this.uuid = uuid;
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			if (p.getUniqueId().equals(uuid)) {
@@ -56,6 +58,16 @@ public class BBPlayer {
 		}
 	}
 
+	public void destoryProfile() {
+		if (c.getConfigurationSection("Data." + uuid.toString()) != null) {
+			c.set("Data." + uuid.toString(), null);
+		}
+
+		YamlFile.getPlayerDataFile().save();
+		Main.getInstance().getBBPlayers().remove(this);
+		this.bbplayer = null;
+	}
+
 	public void addBBPoints(int points) {
 		int newPoints = this.BBPoints + points;
 		c.set("Data." + uuid.toString() + ".BBPoints", Integer.valueOf(newPoints));
@@ -86,6 +98,10 @@ public class BBPlayer {
 		c.set("Data." + uuid.toString() + ".Banned", Boolean.valueOf(banned));
 		YamlFile.getPlayerDataFile().save();
 		this.updateProfile();
+	}
+
+	public BBPlayer getBBPlayer() {
+		return bbplayer;
 	}
 
 	public UUID getUUID() {
