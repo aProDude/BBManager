@@ -48,7 +48,7 @@ public class DataManager {
 		File dir = new File(dataFolder, "Data");
 		if (dir.isDirectory()) {
 			for (File f : dir.listFiles()) {
-				this.playerFiles.add(new YamlFile(f.getName()));
+				this.playerFiles.add(new YamlFile(UUID.fromString(f.getName().replace(".yml", ""))));
 			}
 		}
 	}
