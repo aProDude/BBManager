@@ -36,11 +36,14 @@ public class BBPlayer {
 			this.BBPoints = c.getInt("Data." + uuid.toString() + ".BBPoints");
 			this.BBWarnings = c.getInt("Data." + uuid.toString() + ".BBWarnings");
 			this.isBanned = c.getBoolean("Data." + uuid.toString() + ".Banned");
+			this.file.save();
 		} else {
 			this.BBPoints = this.BBWarnings = 0;
 			this.isBanned = false;
+			this.file.save();
 		}
 		Main.getInstance().getBBPlayers().add(this);
+		this.file.save();
 	}
 
 	public void updateProfile() {
@@ -58,10 +61,13 @@ public class BBPlayer {
 			this.BBPoints = c.getInt("Data." + uuid.toString() + ".BBPoints");
 			this.BBWarnings = c.getInt("Data." + uuid.toString() + ".BBWarnings");
 			this.isBanned = c.getBoolean("Data." + uuid.toString() + ".Banned");
+			this.file.save();
 		} else {
 			this.BBPoints = this.BBWarnings = 0;
 			this.isBanned = false;
+			this.file.save();
 		}
+		this.file.save();
 	}
 
 	public void destoryProfile() {
@@ -69,7 +75,7 @@ public class BBPlayer {
 			c.set("Data." + uuid.toString(), null);
 		}
 
-		YamlFile.getPlayerDataFile().save();
+		this.file.save();
 		Main.getInstance().getBBPlayers().remove(this);
 		this.bbplayer = null;
 	}
@@ -77,32 +83,32 @@ public class BBPlayer {
 	public void addBBPoints(int points) {
 		int newPoints = this.BBPoints + points;
 		c.set("Data." + uuid.toString() + ".BBPoints", Integer.valueOf(newPoints));
-		YamlFile.getPlayerDataFile().save();
+		this.file.save();
 		this.updateProfile();
 	}
 
 	public void setBBPoints(int points) {
 		c.set("Data." + uuid.toString() + ".BBPoints", Integer.valueOf(points));
-		YamlFile.getPlayerDataFile().save();
+		this.file.save();
 		this.updateProfile();
 	}
 
 	public void addBBWarning() {
-		int newPoints = this.BBPoints + 1;
-		c.set("Data." + uuid.toString() + ".BBPoints", Integer.valueOf(newPoints));
-		YamlFile.getPlayerDataFile().save();
+		int newPoints = this.BBWarnings + 1;
+		c.set("Data." + uuid.toString() + ".BBWarnings", Integer.valueOf(newPoints));
+		this.file.save();
 		this.updateProfile();
 	}
 
 	public void setBBWarnings(int warnings) {
-		c.set("Data." + uuid.toString() + ".BBPoints", Integer.valueOf(warnings));
-		YamlFile.getPlayerDataFile().save();
+		c.set("Data." + uuid.toString() + ".BBWarnings", Integer.valueOf(warnings));
+		this.file.save();
 		this.updateProfile();
 	}
 
 	public void setBanned(boolean banned) {
 		c.set("Data." + uuid.toString() + ".Banned", Boolean.valueOf(banned));
-		YamlFile.getPlayerDataFile().save();
+		this.file.save();
 		this.updateProfile();
 	}
 
