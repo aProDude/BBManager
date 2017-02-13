@@ -1,7 +1,9 @@
 package nl._xxprodudexx_.bbmanager.util;
 
 import java.io.File;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -9,23 +11,25 @@ import nl._xxprodudexx_.bbmanager.Main;
 
 public class YamlFile {
 
-	private YamlFile() {
-	}
-
+	private String name;
 	private File file;
 	private FileConfiguration config;
-	
+
 	private static YamlFile playerDataFile = new YamlFile("playerdata");
-	
-	public static YamlFile getPlayerDataFile(){
+
+	public static YamlFile getPlayerDataFile() {
 		return playerDataFile;
 	}
 
 	/**
-	 * This method generates a new yml-file. The name can be set using the constructor-paramter 'String fileName'
-	 * @param fileName ^^
+	 * This method generates a new yml-file. The name can be set using the
+	 * constructor-paramter 'String fileName'
+	 * 
+	 * @param fileName
+	 *            ^^
 	 */
 	public YamlFile(String fileName) {
+		this.name = fileName;
 		if (!Main.getInstance().getDataFolder().exists()) {
 			Main.getInstance().getDataFolder().mkdirs();
 		}
@@ -42,8 +46,38 @@ public class YamlFile {
 		}
 
 		config = YamlConfiguration.loadConfiguration(file);
+		config.options().header("This is " + fileName + ".yml - file.");
+		this.save();
 	}
-	
+
+	public YamlFile(UUID uuid) {
+		this.name = uuid.toString();
+		if (!Main.getInstance().getDataFolder().exists()) {
+			Main.getInstance().getDataFolder().mkdirs();
+		}
+
+		File dataFolder = Main.getInstance().getDataFolder();
+		File folder = new File(dataFolder, "Data");
+
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+
+		file = new File(folder, uuid + ".yml");
+
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		config = YamlConfiguration.loadConfiguration(file);
+		config.options().header("This is the datafile of " + Bukkit.getPlayer(uuid).getName() + ".");
+		this.save();
+	}
+
 	/**
 	 * Load the configuration file and catch any possible exceptions
 	 */
@@ -55,7 +89,7 @@ public class YamlFile {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Save the configuration file and catch any possible exceptions
 	 */
@@ -67,7 +101,7 @@ public class YamlFile {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Reload the configuration file
 	 */
@@ -75,12 +109,21 @@ public class YamlFile {
 	public void reload() {
 		config = YamlConfiguration.loadConfiguration(file);
 	}
-	
+
 	/**
-	 * Returns the FileConfiguration
+	 * @return The name of the File
 	 */
 
-	public FileConfiguration getConfig(){
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @return The FileConfiguration
+	 */
+
+	public FileConfiguration getConfig() {
 		return config;
 	}
+
 }
