@@ -1,5 +1,6 @@
 package nl._xxprodudexx_.bbmanager.manage;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -7,6 +8,7 @@ import java.util.UUID;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import nl._xxprodudexx_.bbmanager.Main;
 import nl._xxprodudexx_.bbmanager.util.YamlFile;
 
 public class DataManager {
@@ -23,12 +25,37 @@ public class DataManager {
 	private Set<YamlFile> playerFiles = new HashSet<YamlFile>();
 	private YamlFile playerFile;
 
-	public void createPlayerFile(UUID uuid) {
+	public YamlFile createPlayerFile(UUID uuid) {
 		while (getPlayerFile(uuid) == null) {
 			playerFile = new YamlFile(uuid);
 			this.playerFiles.add(playerFile);
 		}
-		
+		return this.playerFile;
+	}
+
+	public void saveFiles() {
+		for (YamlFile file : this.playerFiles) {
+			file.save();
+		}
+	}
+
+	public void loadFiles() {
+		if (!Main.getInstance().getDataFolder().exists()) {
+			Main.getInstance().getDataFolder().mkdirs();
+		}
+
+		File dataFolder = Main.getInstance().getDataFolder();
+		File dir = new File(dataFolder, "Data");
+		if (dir.isDirectory()) {
+			for (File f : dir.listFiles()) {
+				this.playerFiles.add(new YamlFile(f.getName()));
+			}
+		}
+	}
+
+	public void unloadFiles() {
+		this.saveFiles();
+		this.playerFiles.clear();
 	}
 
 	public YamlFile getPlayerFile(UUID uuid) {
