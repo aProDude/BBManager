@@ -31,5 +31,9 @@ public enum OffenceType {
 	public enum Category {
 		HACK, CHAT, ACCOUNT;
 	}
+	
+	public enum Punishment {
+		KICK, MUTE, TEMPBAN, PERMBAN;
+	}
 
 }
