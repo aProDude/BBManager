@@ -7,11 +7,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import nl._xxprodudexx_.bbmanager.Main;
+import nl._xxprodudexx_.bbmanager.manage.DataManager;
 
 public class BBPlayer {
 
-	private FileConfiguration c = YamlFile.getPlayerDataFile().getConfig();
-
+	private YamlFile file;
+	private FileConfiguration c;
 	private BBPlayer bbplayer;
 	private UUID uuid;
 	private String name;
@@ -20,6 +21,8 @@ public class BBPlayer {
 	private boolean isBanned;
 
 	public BBPlayer(UUID uuid) {
+		this.file = DataManager.getInstance().createPlayerFile(uuid);
+		this.c = file.getConfig();
 		this.bbplayer = this;
 		this.uuid = uuid;
 		for (Player p : Bukkit.getOnlinePlayers()) {
@@ -41,6 +44,9 @@ public class BBPlayer {
 	}
 
 	public void updateProfile() {
+		this.file = DataManager.getInstance().getPlayerFile(uuid);
+		this.c = this.file.getConfig();
+		this.bbplayer = this;
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			if (p.getUniqueId().equals(uuid)) {
 				this.name = Bukkit.getPlayer(uuid).getName();
