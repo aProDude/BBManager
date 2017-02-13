@@ -17,7 +17,7 @@ import nl._xxprodudexx_.bbmanager.util.YamlFile;
 public class Main extends JavaPlugin {
 
 	private static Main instance;
-	private static BBManagerAPI api = new BBManagerAPI();
+	private static BBManagerAPI api;
 
 	private HashSet<BBPlayer> bbPlayers = new HashSet<BBPlayer>();
 
@@ -25,6 +25,9 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		// Set the instance of this class
 		instance = this;
+		
+		// Set instance of the API
+		api = new BBManagerAPI();
 
 		// Load all configuration-files
 		// YamlFile.getPlayerDataFile().load();
@@ -52,7 +55,10 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 		// Remove the instance of this class
 		instance = null;
-
+		
+		// Remove the instance of the API
+		api = null;
+		
 	
 	}
 
