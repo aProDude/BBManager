@@ -83,12 +83,7 @@ public class BBManagerAPI {
 	}
 
 	public BBPlayer getBBPlayer(Player p) {
-		for (BBPlayer bbp : Main.getInstance().getBBPlayers()) {
-			if (bbp.getUUID().equals(p.getUniqueId())) {
-				return bbp;
-			}
-		}
-		return null;
+		return this.getBBPlayer(p.getUniqueId());
 	}
 
 }
