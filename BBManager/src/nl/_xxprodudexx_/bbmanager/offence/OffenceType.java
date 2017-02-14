@@ -33,7 +33,7 @@ public enum OffenceType {
 	}
 	
 	public enum Punishment {
-		KICK, MUTE, TEMPBAN, PERMBAN;
+		NONE, WARNING, KICK, MUTE, TEMPBAN, PERMBAN;
 	}
 
 }
