@@ -3,3 +3,11 @@ main: nl._xxprodudexx_.bbmanager.Main
 version: 1.0.0-SNAPSHOT
 author: _xXProDudeXx_ & Robpizza
 description: BadBehaviourManager, based on BB-Points!
+
+commands:
+       bb:
+        usage: /<command>
+     
+permissions:
+       bb.commands:
+        default: op
