@@ -9,7 +9,7 @@ public class BadBehaviourListener implements Listener {
 
 	@EventHandler
 	public void on(BadBehaviourEvent e) {
-
+		
 	}
 
 }
