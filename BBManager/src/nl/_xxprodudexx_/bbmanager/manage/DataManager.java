@@ -6,9 +6,13 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import nl._xxprodudexx_.bbmanager.Main;
+import nl._xxprodudexx_.bbmanager.util.BBPlayer;
+import nl._xxprodudexx_.bbmanager.util.Tempban;
 import nl._xxprodudexx_.bbmanager.util.YamlFile;
 
 public class DataManager {
@@ -23,7 +27,10 @@ public class DataManager {
 	}
 
 	private Set<YamlFile> playerFiles = new HashSet<YamlFile>();
+	private Set<Tempban> tempbans = new HashSet<Tempban>();
 	private YamlFile playerFile;
+	private YamlFile tempbanFile = new YamlFile("tempbans");
+	private BBPlayer player;
 
 	public YamlFile createPlayerFile(UUID uuid) {
 		while (getPlayerFile(uuid) == null) {
@@ -49,6 +56,7 @@ public class DataManager {
 		if (dir.isDirectory()) {
 			for (File f : dir.listFiles()) {
 				this.playerFiles.add(new YamlFile(UUID.fromString(f.getName().replace(".yml", ""))));
+				player = new BBPlayer(UUID.fromString(f.getName().replace(".yml", "")));
 			}
 		}
 	}
@@ -56,6 +64,49 @@ public class DataManager {
 	public void unloadFiles() {
 		this.saveFiles();
 		this.playerFiles.clear();
+	}
+
+	public void storeTempbans() {
+		FileConfiguration c = this.tempbanFile.getConfig();
+		for (Tempban ban : this.tempbans) {
+			if (!ban.isEnded() && ban.isStarted()) {
+				ConfigurationSection cs = c.createSection(ban.getUUID().toString());
+				cs.set("Name", ban.getBBPlayer().getName());
+				cs.set("Seconds", ban.getSecondsLeft());
+			}
+		}
+		this.tempbanFile.save();
+	}
+
+	public void loadTempbans() {
+		FileConfiguration c = this.tempbanFile.getConfig();
+		for (String ban : c.getKeys(false)) {
+			UUID uuid = UUID.fromString(ban);
+			long seconds = c.getLong(ban + ".Seconds");
+			Tempban tban = new Tempban(uuid, seconds);
+			tban.startBan();
+		}
+	}
+
+	public Tempban getTempban(UUID uuid) {
+		for (Tempban tb : this.tempbans) {
+			if (tb.getUUID().equals(uuid)) {
+				return tb;
+			}
+		}
+		return null;
+	}
+
+	public Tempban getTempban(Player target) {
+		return getTempban(target.getUniqueId());
+	}
+
+	public Tempban getTempban(OfflinePlayer target) {
+		return getTempban(target.getUniqueId());
+	}
+
+	public Tempban getTempban(BBPlayer target) {
+		return getTempban(target.getUUID());
 	}
 
 	public YamlFile getPlayerFile(UUID uuid) {
@@ -77,6 +128,22 @@ public class DataManager {
 
 	public Set<YamlFile> getPlayerFiles() {
 		return playerFiles;
+	}
+
+	public Set<Tempban> getTempbans() {
+		return tempbans;
+	}
+
+	public YamlFile getTempbanFile() {
+		return tempbanFile;
+	}
+
+	public boolean fileExists(UUID uuid) {
+		return getPlayerFile(uuid) != null;
+	}
+
+	public boolean hasTempban(UUID uuid) {
+		return getTempban(uuid) != null;
 	}
 
 }
