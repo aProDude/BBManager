@@ -3,6 +3,7 @@ package nl._xxprodudexx_.bbmanager.util;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -14,6 +15,9 @@ public class BBPlayer {
 	private YamlFile file;
 	private FileConfiguration c;
 	private BBPlayer bbplayer;
+	private boolean isOnline;
+	private Player target;
+	private OfflinePlayer offlineTarget;
 	private UUID uuid;
 	private String name;
 	private int BBPoints;
@@ -21,27 +25,45 @@ public class BBPlayer {
 	private boolean isBanned;
 
 	public BBPlayer(UUID uuid) {
-		this.file = DataManager.getInstance().createPlayerFile(uuid);
+		if (!DataManager.getInstance().fileExists(uuid)) {
+			this.file = DataManager.getInstance().createPlayerFile(uuid);
+		} else {
+			this.file = DataManager.getInstance().getPlayerFile(uuid);
+		}
 		this.c = file.getConfig();
-		this.bbplayer = this;
-		this.uuid = uuid;
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			if (p.getUniqueId().equals(uuid)) {
 				this.name = Bukkit.getPlayer(uuid).getName();
+				this.target = Bukkit.getPlayer(uuid);
+				this.isOnline = true;
 			} else {
 				this.name = Bukkit.getOfflinePlayer(uuid).getName();
+				this.offlineTarget = Bukkit.getOfflinePlayer(uuid);
+				this.isOnline = false;
 			}
 		}
-		if (c.getString("Data." + uuid.toString()) != null) {
-			this.BBPoints = c.getInt("Data." + uuid.toString() + ".BBPoints");
-			this.BBWarnings = c.getInt("Data." + uuid.toString() + ".BBWarnings");
-			this.isBanned = c.getBoolean("Data." + uuid.toString() + ".Banned");
-			this.file.save();
-		} else {
-			this.BBPoints = this.BBWarnings = 0;
-			this.isBanned = false;
-			this.file.save();
+		if (name != null) {
+			c.set("Data.Name", name);
 		}
+		if (uuid != null) {
+			c.set("Data.UUID", uuid.toString());
+		}
+		if (c.get("Data.BBPoints") == null) {
+			c.set("Data.BBPoints", Integer.valueOf(0));
+		}
+		if (c.get("Data.BBWarnings") == null) {
+			c.set("Data.BBWarnings", Integer.valueOf(0));
+		}
+		if (c.get("Data.Banned") == null) {
+			c.set("Data.Banned", Boolean.valueOf(false));
+		}
+		this.bbplayer = this;
+		this.uuid = uuid;
+		this.name = c.getString("Data.Name");
+		this.BBPoints = c.getInt("Data.BBPoints");
+		this.BBWarnings = c.getInt("Data.BBWarnings");
+		this.isBanned = c.getBoolean("Data.Banned");
+
 		Main.getInstance().getBBPlayers().add(this);
 		this.file.save();
 	}
@@ -53,26 +75,42 @@ public class BBPlayer {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			if (p.getUniqueId().equals(uuid)) {
 				this.name = Bukkit.getPlayer(uuid).getName();
+				this.target = Bukkit.getPlayer(uuid);
+				this.isOnline = true;
 			} else {
 				this.name = Bukkit.getOfflinePlayer(uuid).getName();
+				this.offlineTarget = Bukkit.getOfflinePlayer(uuid);
+				this.isOnline = false;
 			}
 		}
-		if (c.getString("Data." + uuid.toString()) != null) {
-			this.BBPoints = c.getInt("Data." + uuid.toString() + ".BBPoints");
-			this.BBWarnings = c.getInt("Data." + uuid.toString() + ".BBWarnings");
-			this.isBanned = c.getBoolean("Data." + uuid.toString() + ".Banned");
-			this.file.save();
-		} else {
-			this.BBPoints = this.BBWarnings = 0;
-			this.isBanned = false;
-			this.file.save();
+		if (name != null) {
+			c.set("Data.Name", name);
 		}
+		if (uuid != null) {
+			c.set("Data.UUID", uuid.toString());
+		}
+		if (c.get("Data.BBPoints") == null) {
+			c.set("Data.BBPoints", Integer.valueOf(0));
+		}
+		if (c.get("Data.BBWarnings") == null) {
+			c.set("Data.BBWarnings", Integer.valueOf(0));
+		}
+		if (c.get("Data.Banned") == null) {
+			c.set("Data.Banned", Boolean.valueOf(false));
+		}
+		this.bbplayer = this;
+		this.name = c.getString("Data.Name");
+		this.BBPoints = c.getInt("Data.BBPoints");
+		this.BBWarnings = c.getInt("Data.BBWarnings");
+		this.isBanned = c.getBoolean("Data.Banned");
+
+		Main.getInstance().getBBPlayers().add(this);
 		this.file.save();
 	}
 
 	public void destoryProfile() {
-		if (c.getConfigurationSection("Data." + uuid.toString()) != null) {
-			c.set("Data." + uuid.toString(), null);
+		if (c.getConfigurationSection("Data") != null) {
+			c.set("Data", null);
 		}
 
 		this.file.save();
@@ -82,38 +120,50 @@ public class BBPlayer {
 
 	public void addBBPoints(int points) {
 		int newPoints = this.BBPoints + points;
-		c.set("Data." + uuid.toString() + ".BBPoints", Integer.valueOf(newPoints));
+		c.set("Data.BBPoints", Integer.valueOf(newPoints));
 		this.file.save();
 		this.updateProfile();
 	}
 
 	public void setBBPoints(int points) {
-		c.set("Data." + uuid.toString() + ".BBPoints", Integer.valueOf(points));
+		c.set("Data.BBPoints", Integer.valueOf(points));
 		this.file.save();
 		this.updateProfile();
 	}
 
 	public void addBBWarning() {
 		int newPoints = this.BBWarnings + 1;
-		c.set("Data." + uuid.toString() + ".BBWarnings", Integer.valueOf(newPoints));
+		c.set("Data.BBWarnings", Integer.valueOf(newPoints));
 		this.file.save();
 		this.updateProfile();
 	}
 
 	public void setBBWarnings(int warnings) {
-		c.set("Data." + uuid.toString() + ".BBWarnings", Integer.valueOf(warnings));
+		c.set("Data.BBWarnings", Integer.valueOf(warnings));
 		this.file.save();
 		this.updateProfile();
 	}
 
 	public void setBanned(boolean banned) {
-		c.set("Data." + uuid.toString() + ".Banned", Boolean.valueOf(banned));
+		c.set("Data.Banned", Boolean.valueOf(banned));
 		this.file.save();
 		this.updateProfile();
 	}
 
 	public BBPlayer getBBPlayer() {
 		return bbplayer;
+	}
+
+	public boolean isOnline() {
+		return isOnline;
+	}
+
+	public Player getTarget() {
+		return target;
+	}
+
+	public OfflinePlayer getOfflineTarget() {
+		return offlineTarget;
 	}
 
 	public UUID getUUID() {
