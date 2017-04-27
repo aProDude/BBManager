@@ -108,7 +108,7 @@ public class BBPlayer {
 		this.file.save();
 	}
 
-	public void destoryProfile() {
+	public void destroyProfile() {
 		if (c.getConfigurationSection("Data") != null) {
 			c.set("Data", null);
 		}
