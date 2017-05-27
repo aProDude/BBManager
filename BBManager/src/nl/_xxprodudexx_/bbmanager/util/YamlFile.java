@@ -119,4 +119,12 @@ public class YamlFile {
 		return config;
 	}
 
+	/**
+	 * @return The File
+	 */
+
+	public File getFile() {
+		return file;
+	}
+
 }

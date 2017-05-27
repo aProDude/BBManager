@@ -13,6 +13,7 @@ import nl._xxprodudexx_.bbmanager.manage.PunishManager;
 import nl._xxprodudexx_.bbmanager.offence.OffenceType;
 import nl._xxprodudexx_.bbmanager.util.BBPlayer;
 import nl._xxprodudexx_.bbmanager.util.PM;
+import nl._xxprodudexx_.bbmanager.util.Tempban;
 
 public class BBManagerCommand implements CommandExecutor {
 
@@ -47,6 +48,7 @@ public class BBManagerCommand implements CommandExecutor {
 								BBPlayer bbp = new BBPlayer(t.getUniqueId());
 								bbp.updateProfile();
 								PunishManager.getInstance().doPunishment(bbp, offenceArg);
+
 								return true;
 							}
 						}

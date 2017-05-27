@@ -65,15 +65,21 @@ public class DataManager {
 		this.saveFiles();
 		this.playerFiles.clear();
 	}
+	
+	/**
+	 * TEST TEMPBAN METHODS + API METHODS!
+	 */
 
 	public void storeTempbans() {
 		FileConfiguration c = this.tempbanFile.getConfig();
 		for (Tempban ban : this.tempbans) {
-			if (!ban.isEnded() && ban.isStarted()) {
-				ConfigurationSection cs = c.createSection(ban.getUUID().toString());
-				cs.set("Name", ban.getBBPlayer().getName());
-				cs.set("Seconds", ban.getSecondsLeft());
+			ConfigurationSection cs = c.getConfigurationSection(ban.getUUID().toString());
+			if (cs == null) {
+				cs = c.createSection(ban.getUUID().toString());
 			}
+			cs.set("Name", ban.getBBPlayer().getName());
+			cs.set("End", ban.getEnd());
+
 		}
 		this.tempbanFile.save();
 	}
@@ -82,31 +88,9 @@ public class DataManager {
 		FileConfiguration c = this.tempbanFile.getConfig();
 		for (String ban : c.getKeys(false)) {
 			UUID uuid = UUID.fromString(ban);
-			long seconds = c.getLong(ban + ".Seconds");
-			Tempban tban = new Tempban(uuid, seconds);
-			tban.startBan();
+			long seconds = c.getLong(ban + ".End");
+			new Tempban(uuid, seconds);
 		}
-	}
-
-	public Tempban getTempban(UUID uuid) {
-		for (Tempban tb : this.tempbans) {
-			if (tb.getUUID().equals(uuid)) {
-				return tb;
-			}
-		}
-		return null;
-	}
-
-	public Tempban getTempban(Player target) {
-		return getTempban(target.getUniqueId());
-	}
-
-	public Tempban getTempban(OfflinePlayer target) {
-		return getTempban(target.getUniqueId());
-	}
-
-	public Tempban getTempban(BBPlayer target) {
-		return getTempban(target.getUUID());
 	}
 
 	public YamlFile getPlayerFile(UUID uuid) {
@@ -140,10 +124,6 @@ public class DataManager {
 
 	public boolean fileExists(UUID uuid) {
 		return getPlayerFile(uuid) != null;
-	}
-
-	public boolean hasTempban(UUID uuid) {
-		return getTempban(uuid) != null;
 	}
 
 }

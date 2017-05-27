@@ -12,7 +12,7 @@ import nl._xxprodudexx_.bbmanager.command.BBManagerCommand;
 import nl._xxprodudexx_.bbmanager.listener.BadBehaviourListener;
 import nl._xxprodudexx_.bbmanager.manage.DataManager;
 import nl._xxprodudexx_.bbmanager.util.BBPlayer;
-import nl._xxprodudexx_.bbmanager.util.YamlFile;
+import nl._xxprodudexx_.bbmanager.util.Tempban;
 
 public class Main extends JavaPlugin {
 
@@ -34,9 +34,15 @@ public class Main extends JavaPlugin {
 
 		// Load all existing files
 		DataManager.getInstance().loadFiles();
+		DataManager.getInstance().getTempbanFile().load();
 
 		// Load Tempbans
 		DataManager.getInstance().loadTempbans();
+		for (Tempban ban : DataManager.getInstance().getTempbans()) {
+			System.out.println(ban.getEnd());
+		}
+		
+		//TODO FIX UNBAN THREAD
 
 		// Load all Listeners
 		Bukkit.getPluginManager().registerEvents(new BadBehaviourListener(), this);
@@ -48,13 +54,14 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		// Remove the instance of this class
-		instance = null;
+		// Store data of existing tempbans
+		DataManager.getInstance().storeTempbans();
 
 		// Remove the instance of the API
 		api = null;
 
-		DataManager.getInstance().storeTempbans();
+		// Remove the instance of this class
+		instance = null;
 
 	}
 

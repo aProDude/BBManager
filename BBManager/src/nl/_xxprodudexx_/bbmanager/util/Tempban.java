@@ -1,71 +1,30 @@
 package nl._xxprodudexx_.bbmanager.util;
 
-import java.util.HashMap;
 import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import nl._xxprodudexx_.bbmanager.Main;
 import nl._xxprodudexx_.bbmanager.manage.DataManager;
 
 public class Tempban {
 
-	private HashMap<UUID, Long> tempbanMap = new HashMap<>();
-	private boolean started;
-	private int taskID;
 	private UUID uuid;
 	private BBPlayer bbplayer;
-	private long duration_seconds, new_start_seconds;
-	private boolean ended;
+	private long millis;
+	private long end;
 
-	public Tempban(UUID uuid, long seconds) {
-		this.started = false;
+	public Tempban(UUID uuid, long millis) {
 		this.uuid = uuid;
 		this.bbplayer = Main.getAPI().getBBPlayer(uuid);
-		this.duration_seconds = seconds;
-		this.tempbanMap.put(uuid, this.duration_seconds);
-		this.ended = false;
+		this.millis = millis;
+		this.end = System.currentTimeMillis() + this.millis;
+
 	}
 
-	public void startBan() {
-		this.started = true;
+	public void execute() {
+		long current = System.currentTimeMillis();
+		long end = current + this.millis;
+		// calculate and store
 		DataManager.getInstance().getTempbans().add(this);
-		this.taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), new Runnable() {
-			public void run() {
-				tempbanMap.remove(uuid);
-				ended = true;
-			}
-		}, 20 * this.tempbanMap.get(uuid));
-	}
-
-	public void stopBan() {
-		this.started = false;
-		long ended = this.tempbanMap.get(uuid);
-		Bukkit.getScheduler().cancelTask(this.taskID);
-		this.new_start_seconds = this.duration_seconds - ended;
-		this.tempbanMap.remove(uuid);
-		this.tempbanMap.put(uuid, this.new_start_seconds);
-		DataManager.getInstance().getTempbans().remove(this);
-	}
-
-	public void deleteBan() {
-		this.started = false;
-		this.ended = true;
-		DataManager.getInstance().getTempbans().remove(this);
-		this.taskID = -1;
-		this.uuid = null;
-		this.duration_seconds = -1;
-		this.new_start_seconds = -1;
-	}
-	
-	public boolean isStarted(){
-		return started;
-	}
-
-	public int taskID() {
-		return taskID;
 	}
 
 	public UUID getUUID() {
@@ -73,19 +32,15 @@ public class Tempban {
 	}
 
 	public BBPlayer getBBPlayer() {
-		return this.bbplayer;
+		return bbplayer;
 	}
 
-	public long getStartDurationSeconds() {
-		return duration_seconds;
+	public long getMillis() {
+		return millis;
 	}
 
-	public long getSecondsLeft() {
-		return new_start_seconds;
-	}
-
-	public boolean isEnded() {
-		return ended;
+	public long getEnd() {
+		return end;
 	}
 
 }

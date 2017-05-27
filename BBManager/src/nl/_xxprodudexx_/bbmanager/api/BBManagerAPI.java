@@ -2,10 +2,13 @@ package nl._xxprodudexx_.bbmanager.api;
 
 import java.util.UUID;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import nl._xxprodudexx_.bbmanager.Main;
+import nl._xxprodudexx_.bbmanager.manage.DataManager;
 import nl._xxprodudexx_.bbmanager.util.BBPlayer;
+import nl._xxprodudexx_.bbmanager.util.Tempban;
 
 public class BBManagerAPI {
 
@@ -48,6 +51,43 @@ public class BBManagerAPI {
 			p.updateProfile();
 		}
 	}
+
+	// public void tempban(UUID uuid, long seconds) {
+	// if (getTempban(uuid) == null) {
+	// new Tempban(uuid, seconds);
+	// }
+	// }
+	//
+	// public void startTempban(UUID uuid) {
+	// if (getTempban(uuid) != null) {
+	// getTempban(uuid).startBan();
+	// }
+	// }
+	//
+	// public Tempban getTempban(UUID uuid) {
+	// for (Tempban tb : DataManager.getInstance().getTempbans()) {
+	// if (tb.getUUID().equals(uuid)) {
+	// return tb;
+	// }
+	// }
+	// return null;
+	// }
+	//
+	// public Tempban getTempban(Player target) {
+	// return getTempban(target.getUniqueId());
+	// }
+	//
+	// public Tempban getTempban(OfflinePlayer target) {
+	// return getTempban(target.getUniqueId());
+	// }
+	//
+	// public Tempban getTempban(BBPlayer target) {
+	// return getTempban(target.getUUID());
+	// }
+	//
+	// public boolean hasTempban(UUID uuid) {
+	// return getTempban(uuid) != null;
+	// }
 
 	public int getBBPoints(UUID uuid) {
 		if (this.getBBPlayer(uuid) != null) {
